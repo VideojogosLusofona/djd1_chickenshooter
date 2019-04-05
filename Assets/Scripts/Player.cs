@@ -24,5 +24,13 @@ public class Player : MonoBehaviour
         force.y = 0.0f;
 
         rb.AddForce(force);
+
+        float shouldInvert = hAxis * transform.right.x;
+        if (shouldInvert < 0.0f)
+        {
+            float yAngle = 180.0f;
+
+            transform.rotation = transform.rotation * Quaternion.Euler(0.0f, yAngle, 0.0f);
+        }
     }
 }
