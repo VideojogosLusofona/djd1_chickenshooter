@@ -19,20 +19,15 @@ public class Cannon : MonoBehaviour
         Vector3 direction = deltaP.normalized;
 
         Vector3 upVector = Quaternion.Euler(0.0f, 0.0f, 90.0f) * direction;
+        Vector3 forwardVector = Vector3.forward;
 
-        float   tmp = transform.parent.right.x * direction.x;
-
-        if (transform.parent.right.x < 0.0f) upVector = -upVector;
-
-        if (tmp < 0.0f)
+        if (direction.x < 0.0f)
         {
             upVector = -upVector;
-            transform.rotation = Quaternion.LookRotation(Vector3.forward, upVector) * Quaternion.Euler(0.0f, 180.0f, 0.0f);
+            forwardVector = -forwardVector;
         }
-        else
-        {
-            transform.rotation = Quaternion.LookRotation(Vector3.forward, upVector);
-        }
+
+        transform.rotation = Quaternion.LookRotation(forwardVector, upVector);
 
         Vector3 eulerAngles = transform.localRotation.eulerAngles;
 
@@ -40,6 +35,6 @@ public class Cannon : MonoBehaviour
 
         eulerAngles.z = Mathf.Clamp(eulerAngles.z, -45.0f, 45.0f);
 
-        transform.rotation = Quaternion.Euler(eulerAngles);
+        transform.localRotation = Quaternion.Euler(eulerAngles);
     }
 }
