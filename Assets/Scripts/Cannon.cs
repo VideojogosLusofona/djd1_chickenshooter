@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Cannon : MonoBehaviour
 {
+    public GameObject projectilePrefab;
+    public Transform  shootPoint;
+    public float      shootSpeed = 100.0f;
+
     Camera camera;
 
     void Start()
@@ -19,27 +23,36 @@ public class Cannon : MonoBehaviour
         Vector3 direction = deltaP.normalized;
 
         Vector3 upVector = Quaternion.Euler(0.0f, 0.0f, 90.0f) * direction;
+        Vector3 forwardVector = Vector3.forward;
 
-        float   tmp = transform.parent.right.x * direction.x;
-
-        if (transform.parent.right.x < 0.0f) upVector = -upVector;
-
-        if (tmp < 0.0f)
+        if (direction.x < 0.0f)
         {
             upVector = -upVector;
-            transform.rotation = Quaternion.LookRotation(Vector3.forward, upVector) * Quaternion.Euler(0.0f, 180.0f, 0.0f);
-        }
-        else
-        {
-            transform.rotation = Quaternion.LookRotation(Vector3.forward, upVector);
+            forwardVector = -forwardVector;
         }
 
+        transform.rotation = Quaternion.LookRotation(forwardVector, upVector);
+        
         Vector3 eulerAngles = transform.localRotation.eulerAngles;
 
         if (eulerAngles.z > 180.0f) eulerAngles.z = eulerAngles.z - 360.0f;
 
         eulerAngles.z = Mathf.Clamp(eulerAngles.z, -45.0f, 45.0f);
 
-        transform.rotation = Quaternion.Euler(eulerAngles);
+        transform.localRotation = Quaternion.Euler(eulerAngles);
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            ShootChicken();
+        }
+    }
+
+    void ShootChicken()
+    {
+        GameObject newChicken = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
+
+        Rigidbody2D rigidBody = newChicken.GetComponent<Rigidbody2D>();
+        rigidBody.velocity = shootSpeed * newChicken.transform.right;
+
     }
 }
