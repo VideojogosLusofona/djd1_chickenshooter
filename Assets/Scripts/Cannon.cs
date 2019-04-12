@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Cannon : MonoBehaviour
 {
+    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Transform  shootPoint;
+    [SerializeField] float      shootSpeed = 200.0f;
+
     Camera camera;
 
     void Start()
@@ -36,5 +40,18 @@ public class Cannon : MonoBehaviour
         eulerAngles.z = Mathf.Clamp(eulerAngles.z, -45.0f, 45.0f);
 
         transform.localRotation = Quaternion.Euler(eulerAngles);
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            ShootChicken();
+        }
+    }
+
+    void ShootChicken()
+    {
+        GameObject newChicken = Instantiate(projectilePrefab, shootPoint.position, shootPoint.rotation);
+        Rigidbody2D rigidBody = newChicken.GetComponent<Rigidbody2D>();
+
+        rigidBody.velocity = shootSpeed * newChicken.transform.right;
     }
 }
